@@ -100,4 +100,6 @@ app.get("/api/player/:tag/legends", async (req,res)=>{
 });
 
 app.get("*", (_,res)=>res.sendFile(path.join(__dirname,"public","index.html")));
-app.listen(PORT,()=>console.log(`Clash Command Center running on :${PORT}`));
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Clash Command Center running on port ${PORT}`);
+});
