@@ -33,14 +33,20 @@ async function clashking(endpoint){ return getJson(CK + endpoint); }
 
 app.get("/api/config", (_,res)=>res.json({clanTag:DEFAULT_CLAN, official:!!process.env.COC_API_TOKEN}));
 
-app.get("/api/clan", async (req,res)=>{
-  const tag=req.query.tag || DEFAULT_CLAN;
-  try{
-    if(process.env.COC_API_TOKEN) return res.json(await official(`/clans/${enc(tag)}`));
-    return res.json(await clashking(`/clan/${enc(tag)}/basic`));
-  }catch(e){res.status(502).json({error:e.message});}
-});
+app.get("/api/clan", async (req, res) => {
+  const tag = req.query.tag || DEFAULT_CLAN;
 
+  try {
+    const data = await official(`/clans/${enc(tag)}`);
+    res.json(data);
+  } catch (e) {
+    console.error("COC API ERROR:", e);
+    res.status(502).json({
+      error: "Clash API request failed",
+      status: e.message
+    });
+  }
+});
 app.get("/api/members", async (req,res)=>{
   const tag=req.query.tag || DEFAULT_CLAN;
   try{
